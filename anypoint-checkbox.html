@@ -1,0 +1,242 @@
+<!--
+@license
+Copyright 2016 The Advanced REST client authors <arc@mulesoft.com>
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations under
+the License.
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-checked-element-behavior/iron-checked-element-behavior.html">
+<link rel="import" href="../iron-behaviors/iron-button-state.html">
+<link rel="import" href="../anypoint-validatable-behavior/anypoint-validatable-behavior.html">
+<link rel="import" href="../anypoint-styles/typography.html">
+<link rel="import" href="../anypoint-styles/colors.html">
+<link rel="import" href="../anypoint-behaviors/anypoint-hoverable-behavior.html">
+
+<!--
+`<anypoint-checkbox>` is a button that can be either checked or unchecked.
+User can tap the checkbox to check or uncheck it.  Usually you use checkboxes
+to allow user to select multiple options from a set.
+
+Avoid using a single checkbox as an option selector and use toggle button intead.
+
+### Example
+```
+<anypoint-checkbox>label</anypoint-checkbox>
+<anypoint-checkbox checked>label</anypoint-checkbox>
+```
+
+### Styling
+`<anypoint-checkbox>` provides the following custom properties and mixins for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--anypoint-checkbox` | Mixin applied to the element | `{}`
+`--anypoint-checkbox-input-border-bolor` | Border color of the checkbox input square | `--anypoint-color-aluminum4`
+`--anypoint-checkbox-label-color` | A color of the label. | ` --anypoint-color-steel1`
+`--anypoint-checkbox-label` | Mixin applied to the label | ``
+`--anypoint-checkbox-label-checked-color` | Color of checked label | `--anypoint-checkbox-label-color` or `--anypoint-color-steel1`
+`--anypoint-checkbox-label-checked` | Mixin applie dto checked label | ``
+`--anypoint-checkbox-unchecked-color` | Color of a label of unchecked checkbox | `--anypoint-checkbox-label-color` or `--anypoint-color-steel1`
+`--anypoint-checkbox-error-color` | Color of error state | `--anypoint-color-danger`
+
+@group Anypoint Elements
+@element anypoint-checkbox
+@demo demo/index.html
+-->
+<dom-module id="anypoint-checkbox">
+  <template strip-whitespace>
+    <style>
+    :host {
+      display: inline-block;
+      white-space: nowrap;
+      cursor: pointer;
+      @apply(--anypoint-font-common-base);
+      line-height: 0;
+      -webkit-tap-highlight-color: transparent;
+      @apply(--anypoint-checkbox);
+    }
+
+    :host([hidden]) {
+      display: none !important;
+    }
+
+    :host(:focus) {
+      outline: none;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #checkboxContainer {
+      display: inline-block;
+      position: relative;
+      margin-right: 10px;
+    }
+
+    #checkbox {
+      position: relative;
+      box-sizing: border-box;
+      pointer-events: none;
+      border: 1px solid var(--anypoint-checkbox-input-border-bolor, --anypoint-color-aluminum4);
+      -webkit-transition: box-shadow .3s linear;
+      transition: box-shadow .3s linear;
+      display: inline-block;
+      vertical-align: text-top;
+      width: 20px;
+      height: 20px;
+    }
+
+    #checkmark {
+      -webkit-transition: box-shadow .3s linear;
+      transition: box-shadow .3s linear;
+      box-sizing: content-box;
+      box-sizing: initial;
+      position: absolute;
+      left: 4px;
+      top: calc(50% - 2px);
+      width: 3px;
+      height: 2px;
+      -webkit-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
+
+    #checkboxLabel {
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      white-space: normal;
+      line-height: normal;
+      color: var(--anypoint-checkbox-label-color, --anypoint-color-steel1);
+      @apply(--anypoint-checkbox-label);
+    }
+
+    :host([checked]) #checkbox {
+      background: #00a2df;
+      border: 1px solid #00a2df;
+    }
+
+    :host([checked]) #checkmark {
+      background: #fff;
+      box-shadow: 2px 0 0 #fff, 4px 0 0 #fff, 4px -2px 0 #fff, 4px -4px 0 #fff, 4px -6px 0 #fff;
+    }
+
+    :host([checked]) #checkboxLabel {
+      color: var(--anypoint-checkbox-label-checked-color, var(--anypoint-checkbox-label-color, --anypoint-color-steel1));
+      @apply(--anypoint-checkbox-label-checked);
+    }
+
+    #checkboxLabel[hidden] {
+      display: none;
+    }
+
+    :host([disabled]) #checkbox {
+      opacity: 0.5;
+      border-color: var(--anypoint-checkbox-unchecked-color, var(--anypoint-checkbox-label-color, --anypoint-color-steel1));
+    }
+
+    :host([disabled][checked]) #checkbox {
+      background-color: var(--anypoint-checkbox-unchecked-color, var(--anypoint-checkbox-label-color, --anypoint-color-steel1));
+      opacity: 0.5;
+    }
+
+    :host([disabled]) #checkboxLabel {
+      opacity: 0.65;
+    }
+
+    /* invalid state */
+
+    #checkbox.invalid:not(.checked) {
+      border-color: var(--anypoint-checkbox-error-color, --anypoint-color-danger);
+    }
+
+    /* Hovered */
+
+    :host([hovered]):not([checked]) #checkbox {
+       box-shadow: 0 0 0 6px rgba(0,0,0,.12);
+    }
+
+    :host([hovered]):not([checked]) #checkmark {
+      background: #989a9b;
+      box-shadow: 2px 0 0 #989a9b, 4px 0 0 #989a9b, 4px -2px 0 #989a9b, 4px -4px 0 #989a9b, 4px -6px 0 #989a9b;
+      display: block;
+    }
+    </style>
+    <div id="checkboxContainer">
+      <div id="checkbox" class$="[[_computeCheckboxClass(checked, invalid)]]">
+        <div id="checkmark" class$="[[_computeCheckmarkClass(checked)]]"></div>
+      </div>
+    </div>
+    <div id="checkboxLabel">
+      <content></content>
+    </div>
+  </template>
+  <script>
+  Polymer({
+    is: 'anypoint-checkbox',
+
+    behaviors: [
+      Polymer.IronButtonState,
+      Polymer.IronControlState,
+      Polymer.IronCheckedElementBehavior,
+      Anypoint.AnypointHoverableBehavior
+    ],
+    /**
+     * Fired when the checked state changes due to user interaction.
+     *
+     * @event change
+     */
+    /**
+     * Fired when the checked state changes.
+     *
+     * @event iron-change
+     */
+    properties: {
+      ariaActiveAttribute: {
+        type: String,
+        value: 'aria-checked'
+      }
+    },
+
+    hostAttributes: {
+      role: 'checkbox',
+      'aria-checked': false,
+      tabindex: 0
+    },
+
+    _computeCheckboxClass: function(checked, invalid) {
+      var className = '';
+      if (checked) {
+        className += 'checked ';
+      }
+      if (invalid) {
+        className += 'invalid';
+      }
+      return className;
+    },
+
+    _computeCheckmarkClass: function(checked) {
+      return checked ? '' : 'hidden';
+    },
+
+    /**
+     * Synchronizes the element's `active` and `checked` state.
+     */
+    _buttonStateChanged: function() {
+      if (this.disabled) {
+        return;
+      }
+      if (this.isAttached) {
+        this.checked = this.active;
+      }
+    }
+  });
+  </script>
+</dom-module>
