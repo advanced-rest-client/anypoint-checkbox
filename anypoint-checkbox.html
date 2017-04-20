@@ -160,11 +160,11 @@ Custom property | Description | Default
 
     /* Hovered */
 
-    :host([hovered]):not([checked]) #checkbox {
+    :host(:not([checked])[hovered]) #checkbox {
        box-shadow: 0 0 0 6px rgba(0,0,0,.12);
     }
 
-    :host([hovered]):not([checked]) #checkmark {
+    :host(:not([checked])[hovered]) #checkmark {
       background: #989a9b;
       box-shadow: 2px 0 0 #989a9b, 4px 0 0 #989a9b, 4px -2px 0 #989a9b, 4px -4px 0 #989a9b, 4px -6px 0 #989a9b;
       display: block;
