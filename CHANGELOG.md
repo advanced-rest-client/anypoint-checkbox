@@ -1,3 +1,13 @@
+<a name="0.1.6"></a>
+## [0.1.6](https://github.com/advanced-rest-client/anypoint-checkbox/compare/0.1.5...v0.1.6) (2017-05-31)
+
+
+### Update
+
+* Updated license information to match Anypoint licence ([d06fa634aaa471128ba22d33866afc72ca896887](https://github.com/advanced-rest-client/anypoint-checkbox/commit/d06fa634aaa471128ba22d33866afc72ca896887))
+
+
+
 <a name="0.1.5"></a>
 ## [0.1.5](https://github.com/advanced-rest-client/anypoint-checkbox/compare/0.1.4...v0.1.5) (2017-04-20)
 

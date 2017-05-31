@@ -1,6 +1,6 @@
 {
   "name": "anypoint-checkbox",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "license": "All rights reserved to Mulesoft Inc.",
   "description": "Anypoint platform Checkbox",
   "devDependencies": {
